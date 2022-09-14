@@ -1,0 +1,20 @@
+{
+    "files.associations": {
+        "as-set/*": "plaintext",
+        "aut-num/*": "plaintext",
+        "mntner/*": "plaintext",
+        "route/*": "plaintext",
+        "route6/*": "plaintext",
+    },
+    "cSpell.words": [
+        "AGTECH",
+        "ALTDB",
+        "ARIN",
+        "descr",
+        "EZDOMAIN",
+        "GOCODEIT",
+        "MAINT",
+        "PRATTEN",
+        "VULTR"
+    ]
+}

@@ -1,0 +1,58 @@
+aut-num:    AS398057
+as-name:    EVAN-PRATTEN
+descr:      Evan Pratten
+remarks:    Read More: https://ewpratten.com/network
+remarks:
+remarks:    AS398057 has an open peering policy. For more info, see:
+remarks:    https://ewpratten.com/network/#peering
+remarks:
+remarks:    ------ ROUTING POLICY -----
+remarks:    > AS112 Project
+mp-import:  afi any.unicast from AS112 accept AS112
+remarks:
+remarks:    > GoCodeIT
+mp-import:  afi any.unicast from AS835 accept AS-GOCODEIT-DOWN-TORONTO
+mp-export:  afi any.unicast to AS835 announce AS398057
+remarks:
+remarks:    > Constant Company
+mp-import:  afi any.unicast from AS20473 accept AS-VULTR
+mp-export:  afi any.unicast to AS20473 announce AS398057
+remarks:
+remarks:    > iFog
+mp-import:  afi any.unicast from AS34927 accept AS-iFog
+remarks:
+remarks:    > FogIXP Route Servers
+mp-import:  afi any.unicast from AS47498 accept AS-FOGIXP
+remarks:
+remarks:    > August Internet
+mp-import:  afi any.unicast from AS50058 accept AS-AUGUST
+remarks:
+remarks:    > LocIX Route Servers
+mp-import:  afi any.unicast from AS202409 accept AS-LOCIX
+remarks:
+remarks:    > Paul Nicholas Lewis
+mp-import:  afi any.unicast from AS204778 accept AS204778
+remarks:
+remarks:    > Vladislav Tatyanin
+mp-import:  afi any.unicast from AS206016 accept AS-EZDOMAIN
+remarks:
+remarks:    > EricNet
+mp-import:  afi any.unicast from AS206628 accept AS-EricNet
+remarks:
+remarks:    > Adam Goodenough
+mp-import:  afi any.unicast from AS210667 accept AS-AGTECH
+remarks:
+remarks:    > Mario Gomez Canadas
+mp-import:  afi any.unicast from AS212294 accept AS-MARIO
+remarks:    ---------------------------
+remarks:    > Default rules
+mp-export:  afi any.unicast to AS-ANY announce AS-EWP
+remarks:
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220914
+remarks:    LocIX membership
+remarks:    ------- END CHANGES -------
+admin-c:    PRATT166-ARIN
+tech-c:     PRATT166-ARIN
+mnt-by:     MAINT-AS398057
+source:     ALTDB

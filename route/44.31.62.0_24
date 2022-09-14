@@ -1,0 +1,9 @@
+route:      44.31.62.0/24
+descr:      AMPRNet BGP general allocation for VA3ZZA
+origin:     AS398057
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220914
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB

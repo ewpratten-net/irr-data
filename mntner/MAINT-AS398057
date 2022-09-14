@@ -1,0 +1,15 @@
+mntner:     MAINT-AS398057
+descr:      Maintainer for AS398057
+remarks:    ---------------------------
+admin-c:    PRATT166-ARIN
+tech-c:     PRATT166-ARIN
+upd-to:     noc@ewpratten.com
+mnt-nfy:    noc@ewpratten.com
+auth:       MAIL-FROM noc@ewpratten.com
+auth:       MAIL-FROM ewpratten@gmail.com
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220914
+remarks:    Object Created
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB

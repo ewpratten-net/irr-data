@@ -1,0 +1,17 @@
+as-set:     AS398057:AS-DOWNSTREAM
+descr:      Downstreams of AS398057
+remarks:    ---------------------------
+remarks:    > Mario Gomez Canadas
+members:    AS-MARIO
+remarks:
+remarks:    > Vladislav Tatyanin
+members:    AS-EZDOMAIN
+remarks:
+remarks:    > Paul Nicholas Lewis
+members:    AS204778
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220914
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB

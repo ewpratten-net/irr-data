@@ -1,0 +1,15 @@
+as-set:     AS-EWP
+descr:      Default AS-SET to be shared with peers
+remarks:    ---------------------------
+remarks:    > Own ASNs
+members:    AS398057
+members:    AS204466
+remarks:
+remarks:    > Downstream Peers
+members:    AS398057:AS-DOWNSTREAM
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220914
+remarks:    Renamed downstream set
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB
