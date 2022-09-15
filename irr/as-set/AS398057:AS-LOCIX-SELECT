@@ -1,0 +1,9 @@
+as-set:     AS398057:AS-LOCIX-SELECT
+descr:      Select peers to allow over LocIX Route Servers
+members:    AS-XTOM
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220915
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB

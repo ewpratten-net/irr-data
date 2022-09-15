@@ -8,7 +8,7 @@ from typing import Generator, List, Tuple
 
 DEFAULT_IRR_DB = "whois.radb.net"
 ROUTERCONF_PARSER = re.compile(
-    r"@routerconf peer (AS\d+) from (\d+\.\d+\.\d+\.\d+) at {\s*((?:[\d\.:a-z]+,?)+)\s*}\s?(requires-password)?\s?(?:rewrite (\d+) (\d+))?")
+    r"@routerconf peer (AS\d+) from (\d+\.\d+\.\d+\.\d+) at {\s*((?:[\d\.:a-z]+,? ?)+)\s*}\s?(requires-password)?\s?(?:rewrite (\d+) (\d+))?\s?(?:name ([A-Za-z_]+))?")
 MP_IMPORT_PARSER = re.compile(
     r"afi ([a-z\.]+) from (AS[A-Za-z\d\-:]+)\s+accept ([A-Za-z\d\-:]+)")
 MP_EXPORT_PARSER = re.compile(
@@ -40,6 +40,8 @@ def linewise_whois(query: str, source: str) -> Generator[Tuple[str, str], None, 
 
         # If the line dows not start with a character, it is a continuation of the previous line
         if line[0] not in string.ascii_lowercase:
+            if len(cur_value) and cur_value[-1] != " ":
+                cur_value += " "
             cur_value += line.strip()
             continue
 
@@ -105,14 +107,16 @@ def build_router_peer_data(auth_num_obj: List[Tuple[str, str]]) -> dict:
                 # Get the data
                 peer_as = matches.group(1)
                 router_id = matches.group(2)
-                peer_ips = matches.group(3).split(",")
+                peer_ips = [x.strip() for x in matches.group(3).split(",")]
                 requires_password = matches.group(4) is not None
                 rewrite_from = matches.group(5)
                 rewrite_to = matches.group(6)
+                name = matches.group(7)
 
                 # Add the data to the output
                 output.setdefault(router_id, []).append({
                     "peer": int(peer_as.replace("AS", "")),
+                    "name": name,
                     "ips": peer_ips,
                     "requires_password": requires_password,
                     "rewrite_from": int(rewrite_from) if rewrite_from else None,
