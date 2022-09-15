@@ -6,6 +6,9 @@
         "route/*": "plaintext",
         "route6/*": "plaintext",
     },
+    "editor.rulers": [
+        70
+    ],
     "cSpell.words": [
         "AGTECH",
         "ALTDB",
@@ -15,6 +18,7 @@
         "GOCODEIT",
         "MAINT",
         "PRATTEN",
+        "routerconf",
         "VULTR"
     ]
 }

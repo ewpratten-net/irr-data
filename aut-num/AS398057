@@ -6,52 +6,117 @@ remarks:
 remarks:    AS398057 has an open peering policy. For more info, see:
 remarks:    https://ewpratten.com/network/#peering
 remarks:
-remarks:    ------ ROUTING POLICY -----
-remarks:    > AS112 Project
-mp-import:  afi any.unicast from AS112 accept AS112
+remarks:    The following routing policy data includes instructions 
+remarks:    for controlling router auto-configuration tools.
 remarks:
+remarks:    General routerconf format is as follows:
+remarks:    peer <asn> from <router_id> at {<list_of_endpoints>}
+            [requires-password] 
+            [rewrite <source_as> <dest_as>]
+remarks:    
+remarks:    Router IDs in use:
+remarks:     74.119.150.163: rtr001 Toronto (CA)
+remarks:     68.232.175.168: rtr002 New Jersey (US)
+remarks:     193.148.251.59: rtr003 Kansas City (US)
+remarks:     134.195.121.110: rtr004 Fremont (US)
+remarks:     193.148.249.164: rtr005 Frankfurt (DE)
+remarks:
+remarks:    --------------------- ROUTING POLICY ---------------------
+remarks:    > AS112 Project
+remarks:    @routerconf peer AS112 from 193.148.249.164 at {
+                185.1.166.112, 
+                2001:7f8:f2:e1::112 
+            }
+mp-import:  afi any.unicast from AS112 accept AS112
+remarks:    ----------------------------------------------------------
 remarks:    > GoCodeIT
+remarks:    @routerconf peer AS835 from 74.119.150.163 at {
+                170.39.230.5, 
+                2602:fd50:100::5
+            }
 mp-import:  afi any.unicast from AS835 accept AS-GOCODEIT-DOWN-TORONTO
 mp-export:  afi any.unicast to AS835 announce AS398057
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > Constant Company
+remarks:    @routerconf peer AS20473 from 68.232.175.168 at {
+                169.254.169.254, 
+                2001:19f0:ffff::1
+            } requires-password rewrite 64515 20473
 mp-import:  afi any.unicast from AS20473 accept AS-VULTR
 mp-export:  afi any.unicast to AS20473 announce AS398057
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > iFog
+remarks:    @routerconf peer AS34927 from 193.148.251.59 at {
+                193.148.251.1, 
+                2a0c:9a40:1009::1
+            }
+remarks:    @routerconf peer AS34927 from 193.148.249.164 at {
+                193.148.249.1, 
+                2a0c:9a40:1::1
+            }
 mp-import:  afi any.unicast from AS34927 accept AS-iFog
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > FogIXP Route Servers
+remarks:    @routerconf peer AS47498 from 193.148.249.164 at {
+                185.1.147.111, 
+                185.1.147.222, 
+                2001:7f8:ca:1::111, 
+                2001:7f8:ca:1::222
+            }
 mp-import:  afi any.unicast from AS47498 accept AS-FOGIXP
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > August Internet
+remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
+                2602:fc23:10:23::1
+            }
 mp-import:  afi any.unicast from AS50058 accept AS-AUGUST
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > LocIX Route Servers
+remarks:    @routerconf peer AS202409 from 193.148.249.164 at {
+            185.1.166.100, 
+            185.1.166.200, 
+            185.1.166.254, 
+            2001:7f8:f2:e1::babe:1, 
+            2001:7f8:f2:e1::dead:1, 
+            2001:7f8:f2:e1::be5a }
 mp-import:  afi any.unicast from AS202409 accept AS-LOCIX
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > Paul Nicholas Lewis
-mp-import:  afi any.unicast from AS204778 accept AS204778
-remarks:
+remarks:    #mp-import:  afi any.unicast from AS204778 accept AS204778
+remarks:    ----------------------------------------------------------
 remarks:    > Vladislav Tatyanin
+remarks:    @routerconf peer AS206016 from 74.119.150.163 at {
+                2a06:a005:d4f::1:6
+            }
 mp-import:  afi any.unicast from AS206016 accept AS-EZDOMAIN
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > EricNet
+remarks:    @routerconf peer AS206016 from 134.195.121.110 at {
+                192.168.99.2, 
+                2a0f:85c1:22:a:1::
+            }
 mp-import:  afi any.unicast from AS206628 accept AS-EricNet
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > Adam Goodenough
+remarks:    @routerconf peer AS210667 from 193.148.249.164 at {
+                185.1.147.116, 
+                2001:7f8:ca:1::116
+            }
 mp-import:  afi any.unicast from AS210667 accept AS-AGTECH
-remarks:
+remarks:    ----------------------------------------------------------
 remarks:    > Mario Gomez Canadas
+remarks:    @routerconf peer AS212294 from 74.119.150.163 at {
+                2a06:a005:d4f::1:2
+            }
 mp-import:  afi any.unicast from AS212294 accept AS-MARIO
-remarks:    ---------------------------
+remarks:    ----------------------------------------------------------
 remarks:    > Default rules
 mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
-remarks:    --------- CHANGES ---------
-changed:    noc@ewpratten.com 20220914
-remarks:    LocIX membership
-remarks:    ------- END CHANGES -------
+remarks:    ------------------------ CHANGES -------------------------
+changed:    noc@ewpratten.com 20220915
+remarks:    Metadata hell
+remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN
 mnt-by:     MAINT-AS398057
