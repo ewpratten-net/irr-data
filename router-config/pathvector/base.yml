@@ -2,7 +2,7 @@ web-ui-file: /var/www/html/pathvector/index.html
 origin-communities: ["398057:0:100"]
 asn: 398057
 # irr-server: whois.radb.net
-irr-server: "198.108.0.18"
+irr-server: "128.241.192.40"
 default-route: false
 
 # BGP Communities may be found in `AS398057` aut-num

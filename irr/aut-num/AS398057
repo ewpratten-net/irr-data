@@ -53,7 +53,6 @@ mp-export:  afi any.unicast to AS835 announce AS398057
 remarks:    ----------------------------------------------------------
 remarks:    > Hurricane Electric
 remarks:    @routerconf peer AS6939 from 193.148.249.164 at {
-                185.1.167.69,
                 2001:7f8:f2:e1::6939:1
             }
             name Hurricane_Electric
@@ -142,6 +141,22 @@ remarks:    @routerconf peer AS210667 from 193.148.249.164 at {
             name Adam_Goodenough
 mp-import:  afi any.unicast from AS210667 accept AS-AGTECH
 remarks:    ----------------------------------------------------------
+remarks:    > bgp.tools Route Collector
+remarks:    @routerconf peer AS212232 from 74.119.150.163 at {
+                2a0c:2f07:9459::b5
+            } name bgp_tools
+remarks:    @routerconf peer AS212232 from 68.232.175.168 at {
+                2a0c:2f07:9459::b5
+            } name bgp_tools
+remarks:    @routerconf peer AS212232 from 134.195.121.110 at {
+                185.230.223.45
+            } name bgp_tools
+remarks:    @routerconf peer AS212232 from 193.148.249.164 at {
+                185.230.223.45
+            } name bgp_tools
+mp-import:  afi any.unicast from AS212232 accept AS212232
+mp-export:  afi any.unicast to AS212232 announce ANY
+remarks:    ----------------------------------------------------------
 remarks:    > Mario Gomez Canadas
 remarks:    @routerconf peer AS212294 from 74.119.150.163 at {
                 2a06:a005:d4f::1:2
@@ -154,7 +169,7 @@ mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
 remarks:    ------------------------ CHANGES -------------------------
 changed:    noc@ewpratten.com 20220915
-remarks:    Ruleset update
+remarks:    BGP.tools peering
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN
