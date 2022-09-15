@@ -1,7 +1,8 @@
 web-ui-file: /var/www/html/pathvector/index.html
 origin-communities: ["398057:0:100"]
 asn: 398057
-irr-server: whois.radb.net
+# irr-server: whois.radb.net
+irr-server: "198.108.0.18"
 default-route: false
 
 # BGP Communities may be found in `AS398057` aut-num
@@ -39,14 +40,14 @@ templates:
     announce: ["398057:0:100", "398057:0:120"]
     add-on-import: ["398057:0:120"]
 
-  backbone:
-    local-pref: 100
-    filter-irr: false
-    filter-transit-asns: true
-    remove-private-asns: false
-    mp-unicast-46: true
-    enforce-peer-nexthop: false
-    enforce-first-as: false
-    prepend-path: [398057]
-    announce: ["398057:0:100", "398057:0:110", "398057:0:120"]
-    add-on-import: ["398057:0:190"]
+  # backbone:
+  #   local-pref: 100
+  #   filter-irr: false
+  #   filter-transit-asns: true
+  #   remove-private-asns: false
+  #   mp-unicast-46: true
+  #   enforce-peer-nexthop: false
+  #   enforce-first-as: false
+  #   prepend-path: [398057]
+  #   announce: ["398057:0:100", "398057:0:110", "398057:0:120"]
+  #   add-on-import: ["398057:0:190"]

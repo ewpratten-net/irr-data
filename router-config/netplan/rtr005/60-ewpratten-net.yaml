@@ -5,3 +5,41 @@ network:
       addresses:
         - 44.31.119.1/24
         - 2a12:dd47:9fff::1/48
+    # iFog internet
+    ens18:
+      accept-ra: true
+      addresses:
+        - 2a0c:9a40:1::527/48
+        - 193.148.249.164/24
+      match:
+        macaddress: d6:6d:d4:a9:9b:88
+      mtu: 1500
+      nameservers:
+        addresses:
+        - 1.1.1.1
+        - 8.8.8.8
+      set-name: ens18
+      gateway4: 193.148.249.1
+      gateway6: 2a0c:9a40:1::1
+
+    # LocIX
+    ens19:
+      accept-ra: true
+      addresses:
+        - 2001:7f8:f2:e1::39:8057:1/64
+        - 185.1.167.116/23
+      match:
+        macaddress: 36:cd:15:5d:2c:cd
+      mtu: 1500
+      set-name: ens19
+
+    # FogIXP
+    ens20:
+      accept-ra: true
+      addresses:
+        - 2001:7f8:ca:1::95/64
+        - 185.1.147.95/24
+      match:
+        macaddress: 46:9f:7e:d5:1c:8a
+      mtu: 1500
+      set-name: ens20

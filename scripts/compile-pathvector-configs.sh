@@ -44,13 +44,20 @@ for peer in data['neighbors'][router_id]:
         asn=peer['peer'],
     ))
     for neighbor in peer['ips']:
-        print(f'      - {neighbor}')
+        print(f'      - \"{neighbor}\"')
     if peer['policy']['import']:
         print('    as-set: ' + peer['policy']['import'])
     if peer['requires_password']:
         print('    password: ' + os.environ['PEER_PASS_{}'.format(peer_name.upper())])
     if peer['multihop']:
         print('    multihop: true')
+    if peer['many_as']:
+        print('    enforce-first-as: false')
+    if peer['rewrite_from']:
+        print('    filter-bogon-asns: false')
+        print('    remove-private-asns: false')
+    #if peer['policy']['afi'] == 'any.unicast':
+    #    print('    mp-unicast-46: true')
     " >> router-config/pathvector/build/"$name".yml
 
     

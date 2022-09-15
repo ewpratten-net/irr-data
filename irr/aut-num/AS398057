@@ -24,6 +24,7 @@ remarks:    peer <asn> from <router_id> at {<list_of_endpoints>}
             [rewrite <source_as> <dest_as>]
             [name <name>]
             [multihop]
+            [multi-as]
 remarks:    
 remarks:    Router IDs in use:
 remarks:     74.119.150.163: rtr001 Toronto (CA)
@@ -46,11 +47,21 @@ remarks:    @routerconf peer AS835 from 74.119.150.163 at {
             }
             name GoCodeIT
             multihop
+            multi-as
 mp-import:  afi any.unicast from AS835 accept AS-GOCODEIT-DOWN-TORONTO
 mp-export:  afi any.unicast to AS835 announce AS398057
 remarks:    ----------------------------------------------------------
+remarks:    > Hurricane Electric
+remarks:    @routerconf peer AS6939 from 193.148.249.164 at {
+                185.1.167.69,
+                2001:7f8:f2:e1::6939:1
+            }
+            name Hurricane_Electric
+            multihop
+mp-import:  afi any.unicast from AS6939 accept AS6939
+remarks:    ----------------------------------------------------------
 remarks:    > Constant Company
-remarks:    @routerconf peer AS20473 from 68.232.175.168 at {
+remarks:    @routerconf peer AS64515 from 68.232.175.168 at {
                 169.254.169.254, 
                 2001:19f0:ffff::1
             } 
@@ -89,7 +100,8 @@ remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
                 2602:fc23:10:23::1
             }
             name August_Internet
-mp-import:  afi any.unicast from AS50058 accept AS-AUGUST
+            multihop
+mp-import:  afi any.unicast from AS50058 accept AS50058
 remarks:    ----------------------------------------------------------
 remarks:    > LocIX Route Servers
 remarks:    @routerconf peer AS202409 from 193.148.249.164 at {
@@ -112,7 +124,7 @@ remarks:    @routerconf peer AS206016 from 74.119.150.163 at {
                 2a06:a005:d4f::1:6
             }
             name Vladislav_Tatyanin
-mp-import:  afi any.unicast from AS206016 accept AS-EZDOMAIN
+mp-import:  afi any.unicast from AS206016 accept AS206016
 remarks:    ----------------------------------------------------------
 remarks:    > EricNet
 remarks:    @routerconf peer AS206016 from 134.195.121.110 at {
@@ -140,14 +152,9 @@ remarks:    ----------------------------------------------------------
 remarks:    > Default rules
 mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
-remarks:    ----------------- INTERNAL USE COMMANDS ------------------
-remarks:    @backbonelink 001 005
-remarks:    @backbonelink 001 002
-remarks:    @backbonelink 001 004
-remarks:
 remarks:    ------------------------ CHANGES -------------------------
 changed:    noc@ewpratten.com 20220915
-remarks:    Add multihop option
+remarks:    Ruleset update
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN
