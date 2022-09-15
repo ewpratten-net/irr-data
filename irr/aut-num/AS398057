@@ -6,6 +6,15 @@ remarks:
 remarks:    AS398057 has an open peering policy. For more info, see:
 remarks:    https://ewpratten.com/network/#peering
 remarks:
+remarks:    ------------------- BGP COMMUNITY INFO -------------------
+remarks:    > Informational Communities
+remarks:    398057:100 - Route originated from AS398057
+remarks:    398057:110 - Route learned from a peer
+remarks:    398057:111 - Route learned from a peer via route server
+remarks:    398057:120 - Route learned from a downstream / customer
+remarks:    398057:190 - Route has multiple internal hops
+remarks:
+remarks:    --------------------- ROUTING POLICY ---------------------
 remarks:    The following routing policy data includes instructions 
 remarks:    for controlling router auto-configuration tools.
 remarks:
@@ -20,8 +29,7 @@ remarks:     68.232.175.168: rtr002 New Jersey (US)
 remarks:     193.148.251.59: rtr003 Kansas City (US)
 remarks:     134.195.121.110: rtr004 Fremont (US)
 remarks:     193.148.249.164: rtr005 Frankfurt (DE)
-remarks:
-remarks:    --------------------- ROUTING POLICY ---------------------
+remarks:    ----------------------------------------------------------
 remarks:    > AS112 Project
 remarks:    @routerconf peer AS112 from 193.148.249.164 at {
                 185.1.166.112, 

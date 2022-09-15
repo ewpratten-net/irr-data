@@ -1,10 +1,6 @@
 {
     "files.associations": {
-        "as-set/*": "plaintext",
-        "aut-num/*": "plaintext",
-        "mntner/*": "plaintext",
-        "route/*": "plaintext",
-        "route6/*": "plaintext",
+        "irr/**/*": "plaintext",
     },
     "editor.rulers": [
         70
