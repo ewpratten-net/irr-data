@@ -71,7 +71,7 @@ for line in data.split('|'):
     asn: {nonlocal_asn}
     template: backbone
     neighbors:
-      - $ROUTER_LINK_PREFIX:0:{hex(int(num1) + int(num2))[2:]}::{int('$router_num')}
+      - $ROUTER_LINK_PREFIX:0:{hex(int(num1) + int(num2))[2:]}::{int(nonlocal_router_num)}
     ''')
     " >> pathvector/build/"$name".yml
 done

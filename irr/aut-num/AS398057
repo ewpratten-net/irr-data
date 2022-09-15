@@ -45,6 +45,7 @@ remarks:    @routerconf peer AS835 from 74.119.150.163 at {
                 2602:fd50:100::5
             }
             name GoCodeIT
+            multihop
 mp-import:  afi any.unicast from AS835 accept AS-GOCODEIT-DOWN-TORONTO
 mp-export:  afi any.unicast to AS835 announce AS398057
 remarks:    ----------------------------------------------------------
