@@ -8,7 +8,7 @@ from typing import Generator, List, Tuple
 
 DEFAULT_IRR_DB = "whois.radb.net"
 ROUTERCONF_PARSER = re.compile(
-    r"@routerconf peer (AS\d+) from (\d+\.\d+\.\d+\.\d+) at {\s*((?:[\d\.:a-z]+,? ?)+)\s*}\s?(requires-password)?\s?(?:rewrite (\d+) (\d+))?\s?(?:name ([A-Za-z_]+))?")
+    r"@routerconf peer (AS\d+) from (\d+\.\d+\.\d+\.\d+) at {\s*((?:[\d\.:a-z]+,? ?)+)\s*}\s?(requires-password)?\s?(?:rewrite (\d+) (\d+))?\s?(?:name ([A-Za-z_]+))?\s?(multihop)?")
 MP_IMPORT_PARSER = re.compile(
     r"afi ([a-z\.]+) from (AS[A-Za-z\d\-:]+)\s+accept ([A-Za-z\d\-:]+)")
 MP_EXPORT_PARSER = re.compile(
@@ -112,6 +112,7 @@ def build_router_peer_data(auth_num_obj: List[Tuple[str, str]]) -> dict:
                 rewrite_from = matches.group(5)
                 rewrite_to = matches.group(6)
                 name = matches.group(7)
+                multihop = matches.group(8) is not None
 
                 # Add the data to the output
                 output.setdefault(router_id, []).append({
@@ -121,7 +122,8 @@ def build_router_peer_data(auth_num_obj: List[Tuple[str, str]]) -> dict:
                     "requires_password": requires_password,
                     "rewrite_from": int(rewrite_from) if rewrite_from else None,
                     "rewrite_to": int(rewrite_to) if rewrite_to else None,
-                    "policy": get_route_policy(auth_num_obj, int(peer_as.replace("AS", "")))
+                    "policy": get_route_policy(auth_num_obj, int(peer_as.replace("AS", ""))),
+                    "multihop": multihop
                 })
 
     return output

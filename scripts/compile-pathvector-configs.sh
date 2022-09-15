@@ -29,23 +29,28 @@ for config in pathvector/router/*.yml; do
     
     # Send the routerconf data to python to convert into more yml
     echo "$routerconf_json" | python3 -c "\
-import json, sys
+import json, sys, os
 data = json.load(sys.stdin)
 router_id = $router_id
 print('\npeers:')
 for peer in data['neighbors'][router_id]:
+    peer_name = peer['name'].lower() if peer['name'] else 'as' + str(peer['peer'])
     print(
         '''  {name}:
     asn: {asn}
     template: peer
     neighbors:'''.format(
-        name=peer['name'].lower() if peer['name'] else 'as' + str(peer['peer']),
+        name=peer_name,
         asn=peer['peer'],
     ))
     for neighbor in peer['ips']:
         print(f'      - {neighbor}')
     if peer['policy']['import']:
         print('    as-set: ' + peer['policy']['import'])
+    if peer['requires_password']:
+        print('    password: ' + os.environ['PEER_PASS_{}'.format(peer_name.upper())])
+    if peer['multihop']:
+        print('    multihop: true')
     " >> pathvector/build/"$name".yml
 
     

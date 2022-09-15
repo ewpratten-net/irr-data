@@ -23,6 +23,7 @@ remarks:    peer <asn> from <router_id> at {<list_of_endpoints>}
             [requires-password] 
             [rewrite <source_as> <dest_as>]
             [name <name>]
+            [multihop]
 remarks:    
 remarks:    Router IDs in use:
 remarks:     74.119.150.163: rtr001 Toronto (CA)
@@ -55,6 +56,7 @@ remarks:    @routerconf peer AS20473 from 68.232.175.168 at {
             requires-password 
             rewrite 64515 20473
             name Constant_Company
+            multihop
 mp-import:  afi any.unicast from AS20473 accept AS-VULTR
 mp-export:  afi any.unicast to AS20473 announce AS398057
 remarks:    ----------------------------------------------------------
@@ -144,7 +146,7 @@ remarks:    @backbonelink 001 004
 remarks:
 remarks:    ------------------------ CHANGES -------------------------
 changed:    noc@ewpratten.com 20220915
-remarks:    Backbone linking commands
+remarks:    Add multihop option
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN
