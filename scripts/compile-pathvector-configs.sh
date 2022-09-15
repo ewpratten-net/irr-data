@@ -1,7 +1,7 @@
 #! /bin/bash
 set -e
 
-ROUTER_LINK_PREFIX=2a12:dd47:9001:
+ROUTER_LINK_PREFIX=2a12:dd47:9001
 
 # Ensure the build directory exists
 mkdir -p pathvector/build
