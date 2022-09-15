@@ -137,9 +137,14 @@ remarks:    ----------------------------------------------------------
 remarks:    > Default rules
 mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
+remarks:    ----------------- INTERNAL USE COMMANDS ------------------
+remarks:    @backbonelink 001 005
+remarks:    @backbonelink 001 002
+remarks:    @backbonelink 001 004
+remarks:
 remarks:    ------------------------ CHANGES -------------------------
 changed:    noc@ewpratten.com 20220915
-remarks:    Add net names to metadata
+remarks:    Backbone linking commands
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN
