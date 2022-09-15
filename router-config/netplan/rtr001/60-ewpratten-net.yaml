@@ -1,0 +1,18 @@
+network:
+  version: 2
+  ethernets:
+    lo:
+      addresses:
+        - 44.31.119.1/24
+        - 44.31.119.2/24
+        - 2a12:dd47:9fff::1/48
+        - 2a12:dd47:9fff::2/48
+        - 2a07:54c2::/48
+        - 2a07:54c2:b00b:b00b:b00b:b00b:b00b:b00b/48
+  tunnels:
+    peer-august:
+      mode: gre
+      local: 74.119.150.163
+      remote: 165.140.142.121
+      addresses:
+          - 2602:fc23:10:23::2/64

@@ -4,16 +4,16 @@ set -e
 ROUTER_LINK_PREFIX=2a12:dd47:9001
 
 # Ensure the build directory exists
-mkdir -p pathvector/build
+mkdir -p router-config/pathvector/build
 
 # Save the routerconf data for processing
 routerconf_json=$(python3 scripts/autnum-routerconf-parser.py AS398057 --aut-num-source-db whois.altdb.net)
 
 # Get the backbone link pairs
-BONE_LINK_NUMBERS=$(whois -h whois.altdb.net AS398057 | grep "remarks:\s*@backbonelink" | awk '{ print $3 " " $4 "|" }')
+# BONE_LINK_NUMBERS=$(whois -h whois.altdb.net AS398057 | grep "remarks:\s*@backbonelink" | awk '{ print $3 " " $4 "|" }')
 
 # Handle each base config
-for config in pathvector/router/*.yml; do
+for config in router-config/pathvector/router/*.yml; do
     name=$(basename "$config" .yml)
     echo "Building: $name"
     
@@ -25,7 +25,7 @@ for config in pathvector/router/*.yml; do
     echo "Router ID: $router_id"
     
     # Concat base data into a single file
-    cat "$config" pathvector/base.yml > pathvector/build/"$name".yml
+    cat "$config" router-config/pathvector/base.yml > router-config/pathvector/build/"$name".yml
     
     # Send the routerconf data to python to convert into more yml
     echo "$routerconf_json" | python3 -c "\
@@ -51,27 +51,27 @@ for peer in data['neighbors'][router_id]:
         print('    password: ' + os.environ['PEER_PASS_{}'.format(peer_name.upper())])
     if peer['multihop']:
         print('    multihop: true')
-    " >> pathvector/build/"$name".yml
+    " >> router-config/pathvector/build/"$name".yml
 
     
-    echo $BONE_LINK_NUMBERS | python3 -c "\
-import sys
-data = sys.stdin.read()
-for line in data.split('|'):
-    if not line.strip():
-        continue
-    num1, num2 = line.strip().split(' ',1)
-    nonlocal_router_num = num1 if num1 != '$router_num' else num2
-    nonlocal_asn = '4204466' + nonlocal_router_num
+#     echo $BONE_LINK_NUMBERS | python3 -c "\
+# import sys
+# data = sys.stdin.read()
+# for line in data.split('|'):
+#     if not line.strip():
+#         continue
+#     num1, num2 = line.strip().split(' ',1)
+#     nonlocal_router_num = num1 if num1 != '$router_num' else num2
+#     nonlocal_asn = '4204466' + nonlocal_router_num
 
-    # If either of the numbers is the router number, add the link
-    if num1 == '$router_num' or num2 == '$router_num':
-        print(f'''  backbone-{num1}-{num2}:
-    local-asn: 4204466$router_num
-    asn: {nonlocal_asn}
-    template: backbone
-    neighbors:
-      - $ROUTER_LINK_PREFIX:0:{hex(int(num1) + int(num2))[2:]}::{int(nonlocal_router_num)}
-    ''')
-    " >> pathvector/build/"$name".yml
+#     # If either of the numbers is the router number, add the link
+#     if num1 == '$router_num' or num2 == '$router_num':
+#         print(f'''  backbone-{num1}-{num2}:
+#     local-asn: 4204466$router_num
+#     asn: {nonlocal_asn}
+#     template: backbone
+#     neighbors:
+#       - $ROUTER_LINK_PREFIX:0:{hex(int(num1) + int(num2))[2:]}::{int(nonlocal_router_num)}
+#     ''')
+#     " >> pathvector/build/"$name".yml
 done
