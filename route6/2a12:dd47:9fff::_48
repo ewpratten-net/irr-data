@@ -1,0 +1,9 @@
+route6:     2a12:dd47:9fff::/48
+descr:      Evan Pratten Multi-Use Anycast
+origin:     AS398057
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220914
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB
