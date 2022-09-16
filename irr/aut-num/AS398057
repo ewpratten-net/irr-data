@@ -58,7 +58,6 @@ remarks:    @routerconf peer AS6939 from 193.148.249.164 at {
                 2001:7f8:f2:e1::6939:1
             }
             name hurricane
-            multihop
 mp-import:  afi any.unicast from AS6939 accept AS6939
 remarks:    ----------------------------------------------------------
 remarks:    > Constant Company
@@ -80,7 +79,7 @@ remarks:    @routerconf peer AS34927 from 193.148.249.164 at {
             }
             name ifog
             extended-nexthop
-mp-import:  afi any.unicast from AS34927 accept AS-iFog
+mp-import:  afi any.unicast from AS34927 accept AS34927
 remarks:    ----------------------------------------------------------
 remarks:    > FogIXP Route Servers
 remarks:    @routerconf peer AS47498 from 193.148.249.164 at {
@@ -90,7 +89,7 @@ remarks:    @routerconf peer AS47498 from 193.148.249.164 at {
                 2001:7f8:ca:1::222
             }
             name FogIXP_RS
-mp-import:  afi any.unicast from AS47498 accept AS-FOGIXP
+remarks:    #mp-import:  afi any.unicast from AS47498 accept AS-FOGIXP
 remarks:    ----------------------------------------------------------
 remarks:    > August Internet
 remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
@@ -145,16 +144,16 @@ remarks:    ----------------------------------------------------------
 remarks:    > bgp.tools Route Collector
 remarks:    @routerconf peer AS212232 from 74.119.150.163 at {
                 2a0c:2f07:9459::b5
-            } name bgp_tools multihop extended-nexthop
+            } name bgp_tools multihop extended-nexthop add-paths
 remarks:    @routerconf peer AS212232 from 68.232.175.168 at {
                 2a0c:2f07:9459::b5
-            } name bgp_tools multihop extended-nexthop
+            } name bgp_tools multihop extended-nexthop add-paths
 remarks:    @routerconf peer AS212232 from 134.195.121.110 at {
                 185.230.223.45
-            } name bgp_tools multihop extended-nexthop
+            } name bgp_tools multihop extended-nexthop add-paths
 remarks:    @routerconf peer AS212232 from 193.148.249.164 at {
                 2a0c:2f07:9459::b3
-            } name bgp_tools multihop extended-nexthop
+            } name bgp_tools multihop extended-nexthop add-paths
 mp-import:  afi any.unicast from AS212232 accept AS212232
 mp-export:  afi any.unicast to AS212232 announce ANY
 remarks:    ----------------------------------------------------------

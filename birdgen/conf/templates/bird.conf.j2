@@ -94,9 +94,7 @@ protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
     {% for num in [4,6] %}
     ipv{{ num }} {
 
-        {% if peer.add_paths %}
         add paths;
-        {% endif %}
         {% if peer.extended_nexthop %}
         extended next hop;
         {% endif %}
@@ -143,7 +141,9 @@ protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
             reject_out_of_bounds_routes();
 
             # Require paths to start with own as
+            {% if "0.0.0.0/0{0,32}" not in allowed_exports.ipv4 and "::/0{0,128}" not in allowed_exports.ipv6 %}
             if bgp_path.len > 0 && bgp_path.first != OWNAS then reject;
+            {% endif %}
 
             # Only allow specified routes to the peer
             if (net.type = NET_IP4) then {
@@ -169,3 +169,57 @@ protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
 }
 {% endfor%}
 {% endfor %}
+
+# Open a passive backbone connection on the main router
+ipv6 table multihop_madness_v6;
+protocol static {
+    ipv6 {
+        table multihop_madness_v6;
+        import all;
+    };
+    route 2a12:dd47:9000::/48 via "backbone";
+}
+{% if router_id == '74.119.150.163' %}
+protocol bgp backbone {
+    local as OWNAS;
+    neighbor range 2a12:dd47:9000::/48 as 4204466000;
+    multihop;
+    rs client;
+    ipv4 {
+        igp table multihop_madness_v6;
+        extended next hop;
+        add paths;
+        next hop self;
+        import where can_locally_originate_route();
+        export where can_locally_originate_route();
+    };
+    ipv6 {
+        igp table multihop_madness_v6;
+        add paths;
+        next hop self;
+        import where can_locally_originate_route();
+        export where can_locally_originate_route();
+    };
+}
+{% else %}
+protocol bgp backbone {
+    local as 4204466000;
+    neighbor 2a12:dd47:9000::1 as OWNAS;
+    multihop;
+    ipv4 {
+        igp table multihop_madness_v6;
+        extended next hop;
+        add paths;
+        next hop self;
+        import where can_locally_originate_route();
+        export where can_locally_originate_route();
+    };
+    ipv6 {
+        igp table multihop_madness_v6;
+        add paths;
+        next hop self;
+        import where can_locally_originate_route();
+        export where can_locally_originate_route();
+    };
+}
+{% endif %}
