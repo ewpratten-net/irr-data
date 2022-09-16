@@ -20,6 +20,7 @@ templates:
     filter-as-set: true
     auto-as-set-members: true
     filter-transit-asns: true
+    enforce-peer-nexthop: false
     filter-rpki: true
     announce: ["398057:0:100", "398057:0:120"]
     add-on-import: ["398057:0:110"]
@@ -36,16 +37,17 @@ templates:
     announce: ["398057:0:100", "398057:0:120"]
     add-on-import: ["398057:0:110", "398057:0:111"]
 
-  downstream:
-    local-pref: 260
-    filter-irr: true
-    filter-as-set: true
-    auto-as-set-members: true
-    filter-transit-asns: true
-    allow-blackhole-community: true
-    filter-rpki: true
-    announce: ["398057:0:100", "398057:0:120"]
-    add-on-import: ["398057:0:120"]
+  # downstream:
+  #   local-pref: 260
+  #   filter-irr: false
+  #   filter-as-set: true
+  #   auto-as-set-members: true
+  #   filter-transit-asns: true
+  #   allow-blackhole-community: true
+  #   enforce-peer-nexthop: false
+  #   filter-rpki: true
+  #   announce: ["398057:0:100", "398057:0:120"]
+  #   add-on-import: ["398057:0:120"]
 
   # backbone:
   #   local-pref: 100

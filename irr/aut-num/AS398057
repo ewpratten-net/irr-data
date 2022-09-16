@@ -21,10 +21,12 @@ remarks:
 remarks:    General routerconf format is as follows:
 remarks:    peer <asn> from <router_id> at {<list_of_endpoints>}
             [requires-password] 
-            [rewrite <source_as> <dest_as>]
+            [uses-private-as <asn>]
+            [override-own-as <asn>]
             [name <name>]
             [multihop]
-            [multi-as]
+            [add-paths]
+            [extended-nexthop]
 remarks:    
 remarks:    Router IDs in use:
 remarks:     74.119.150.163: rtr001 Toronto (CA)
@@ -45,43 +47,39 @@ remarks:    @routerconf peer AS835 from 74.119.150.163 at {
                 170.39.230.5, 
                 2602:fd50:100::5
             }
-            name GoCodeIT
+            name xenyth
             multihop
-            multi-as
 mp-import:  afi any.unicast from AS835 accept AS-GOCODEIT-DOWN-TORONTO
 mp-export:  afi any.unicast to AS835 announce AS398057
 remarks:    ----------------------------------------------------------
 remarks:    > Hurricane Electric
 remarks:    @routerconf peer AS6939 from 193.148.249.164 at {
+                185.1.167.69,
                 2001:7f8:f2:e1::6939:1
             }
-            name Hurricane_Electric
+            name hurricane
             multihop
 mp-import:  afi any.unicast from AS6939 accept AS6939
 remarks:    ----------------------------------------------------------
 remarks:    > Constant Company
-remarks:    @routerconf peer AS64515 from 68.232.175.168 at {
+remarks:    @routerconf peer AS20473 from 68.232.175.168 at {
                 169.254.169.254, 
                 2001:19f0:ffff::1
             } 
             requires-password 
-            rewrite 64515 20473
-            name Constant_Company
+            uses-private-as 64515 
+            name constant
             multihop
 mp-import:  afi any.unicast from AS20473 accept AS-VULTR
 mp-export:  afi any.unicast to AS20473 announce AS398057
 remarks:    ----------------------------------------------------------
 remarks:    > iFog
-remarks:    @routerconf peer AS34927 from 193.148.251.59 at {
-                193.148.251.1, 
-                2a0c:9a40:1009::1
-            }
-            name iFog
 remarks:    @routerconf peer AS34927 from 193.148.249.164 at {
                 193.148.249.1, 
                 2a0c:9a40:1::1
             }
-            name iFog
+            name ifog
+            extended-nexthop
 mp-import:  afi any.unicast from AS34927 accept AS-iFog
 remarks:    ----------------------------------------------------------
 remarks:    > FogIXP Route Servers
@@ -98,8 +96,9 @@ remarks:    > August Internet
 remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
                 2602:fc23:10:23::1
             }
-            name August_Internet
+            name august
             multihop
+            extended-nexthop
 mp-import:  afi any.unicast from AS50058 accept AS50058
 remarks:    ----------------------------------------------------------
 remarks:    > LocIX Route Servers
@@ -123,6 +122,7 @@ remarks:    @routerconf peer AS206016 from 74.119.150.163 at {
                 2a06:a005:d4f::1:6
             }
             name Vladislav_Tatyanin
+            extended-nexthop
 mp-import:  afi any.unicast from AS206016 accept AS206016
 remarks:    ----------------------------------------------------------
 remarks:    > EricNet
@@ -131,6 +131,7 @@ remarks:    @routerconf peer AS206016 from 134.195.121.110 at {
                 2a0f:85c1:22:a:1::
             }
             name EricNet
+            extended-nexthop
 mp-import:  afi any.unicast from AS206628 accept AS-EricNet
 remarks:    ----------------------------------------------------------
 remarks:    > Adam Goodenough
@@ -144,16 +145,16 @@ remarks:    ----------------------------------------------------------
 remarks:    > bgp.tools Route Collector
 remarks:    @routerconf peer AS212232 from 74.119.150.163 at {
                 2a0c:2f07:9459::b5
-            } name bgp_tools multihop
+            } name bgp_tools multihop extended-nexthop
 remarks:    @routerconf peer AS212232 from 68.232.175.168 at {
                 2a0c:2f07:9459::b5
-            } name bgp_tools multihop
+            } name bgp_tools multihop extended-nexthop
 remarks:    @routerconf peer AS212232 from 134.195.121.110 at {
                 185.230.223.45
-            } name bgp_tools multihop
+            } name bgp_tools multihop extended-nexthop
 remarks:    @routerconf peer AS212232 from 193.148.249.164 at {
-                185.230.223.45
-            } name bgp_tools multihop
+                2a0c:2f07:9459::b3
+            } name bgp_tools multihop extended-nexthop
 mp-import:  afi any.unicast from AS212232 accept AS212232
 mp-export:  afi any.unicast to AS212232 announce ANY
 remarks:    ----------------------------------------------------------
@@ -162,14 +163,15 @@ remarks:    @routerconf peer AS212294 from 74.119.150.163 at {
                 2a06:a005:d4f::1:2
             }
             name Mario_Gomez_Canadas
+            extended-nexthop
 mp-import:  afi any.unicast from AS212294 accept AS-MARIO
 remarks:    ----------------------------------------------------------
 remarks:    > Default rules
 mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
 remarks:    ------------------------ CHANGES -------------------------
-changed:    noc@ewpratten.com 20220915
-remarks:    BGP.tools peering
+changed:    noc@ewpratten.com 20220916
+remarks:    Policy updates
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN
