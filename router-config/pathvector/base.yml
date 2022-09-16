@@ -5,6 +5,13 @@ asn: 398057
 irr-server: "128.241.192.40"
 default-route: false
 
+kernel: 
+  reject-connected: true
+  reject4:
+    - static4
+  reject6:
+    - static6
+
 # BGP Communities may be found in `AS398057` aut-num
 templates:
   peer:

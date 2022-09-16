@@ -144,16 +144,16 @@ remarks:    ----------------------------------------------------------
 remarks:    > bgp.tools Route Collector
 remarks:    @routerconf peer AS212232 from 74.119.150.163 at {
                 2a0c:2f07:9459::b5
-            } name bgp_tools
+            } name bgp_tools multihop
 remarks:    @routerconf peer AS212232 from 68.232.175.168 at {
                 2a0c:2f07:9459::b5
-            } name bgp_tools
+            } name bgp_tools multihop
 remarks:    @routerconf peer AS212232 from 134.195.121.110 at {
                 185.230.223.45
-            } name bgp_tools
+            } name bgp_tools multihop
 remarks:    @routerconf peer AS212232 from 193.148.249.164 at {
                 185.230.223.45
-            } name bgp_tools
+            } name bgp_tools multihop
 mp-import:  afi any.unicast from AS212232 accept AS212232
 mp-export:  afi any.unicast to AS212232 announce ANY
 remarks:    ----------------------------------------------------------
