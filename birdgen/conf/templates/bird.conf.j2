@@ -3,6 +3,12 @@
 define OWNAS = {{ own_asn }};
 router id {{ router_id }};
 
+# Everyone shall announce least specific
+protocol static {
+    ipv6;
+    route 2a12:dd47:9000::/36 unreachable;
+} 
+
 # Check function to see if IRR allows us to originate a prefix
 function can_locally_originate_route() {
     if (net.type = NET_IP4) then {
@@ -34,24 +40,32 @@ filter local_import {
 filter kernel_export {
     reject_bogon_routes();
     if source = RTS_DEVICE then reject;
+    krt_metric = 1100;
     accept;
 }
 protocol device {};
 protocol direct { 
     ipv4 { import filter local_import; }; 
     ipv6 { import filter local_import; }; 
+    interface "*";
 }
 protocol kernel {
     ipv4 {
         import filter local_import;
         export filter kernel_export;
     };
+    learn;
+    scan time 10;
+    metric 0;
 }
 protocol kernel {
     ipv6 {
         import filter local_import;
         export filter kernel_export;
     };
+    learn;
+    scan time 10;
+    metric 0;
 }
 
 # Peers
