@@ -1,0 +1,9 @@
+route6:     2a12:dd47:9011::/48
+descr:      V6ROAM North America
+origin:     AS398057
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220916
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB

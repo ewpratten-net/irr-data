@@ -20,8 +20,8 @@ def main() -> int:
     self_origin_routes = get_routes_for_asn(args.asn)
 
     # Get the routing policy for the ASN
-    aut_num = linewise_whois(
-        f"AS{args.asn}", args.aut_num_source_db or "whois.radb.net")
+    aut_num = list(linewise_whois(
+        f"AS{args.asn}", args.aut_num_source_db or "whois.radb.net"))
     routing_policy = build_router_peer_data(args.asn, aut_num)
     
     # We need a list of router ids to iterate over
@@ -47,7 +47,10 @@ def main() -> int:
             routing_policy=routing_policy[router_id]
         )
         with open(output_dir / f"{router_id}.conf", "w") as f:
-            f.write(file_contents)
+            for line in file_contents.splitlines():
+                if not line.strip():
+                   continue
+                f.write(line + "\n")
         
 
     return 0

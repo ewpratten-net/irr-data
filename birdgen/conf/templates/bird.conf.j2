@@ -18,3 +18,140 @@ function can_locally_originate_route() {
     return false;
 }
 
+# RPKI
+{% include 'rpki.conf' %}
+
+# Load utils and stuff 
+{% include 'utils.conf' %}
+{% include 'blackhole.conf' %}
+{% include 'actions.conf' %}
+
+# Kernel
+filter local_import {
+    if !can_locally_originate_route() then reject;
+    accept;
+}
+filter kernel_export {
+    reject_bogon_routes();
+    if source = RTS_DEVICE then reject;
+    accept;
+}
+protocol device {};
+protocol direct { 
+    ipv4 { import filter local_import; }; 
+    ipv6 { import filter local_import; }; 
+}
+protocol kernel {
+    ipv4 {
+        import filter local_import;
+        export filter kernel_export;
+    };
+}
+protocol kernel {
+    ipv6 {
+        import filter local_import;
+        export filter kernel_export;
+    };
+}
+
+# Peers
+{% for peer in routing_policy %}
+{% for address in peer.peer_neighbor_ips %}
+{% if ":" in address %}
+{% set address_kind = 6 %}
+{% else %}
+{% set address_kind = 4 %}
+{% endif %}
+protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
+    local as {{ peer.own_as }};
+    neighbor {{ address }} as {{ peer.peer_as }};
+
+    {% if peer.multihop %}
+    multihop;
+    {% endif %}
+
+    {% if peer.password %}
+    password "{{ peer.password }}";
+    {% endif %}
+
+    {% set allowed_imports = peer.get_peer_allowed_routes() %}
+    {% set allowed_exports = peer.get_allowed_routes_for_export() %}
+
+    {% for num in [4,6] %}
+    ipv{{ num }} {
+
+        {% if peer.add_paths %}
+        add paths;
+        {% endif %}
+        {% if peer.extended_nexthop %}
+        extended next hop;
+        {% endif %}
+
+        import filter {
+            # Filter out the bad
+            reject_bogon_routes();
+            reject_bogon_asns();
+            reject_out_of_bounds_routes();
+            reject_rpki_invalid();
+            reject_transit_paths();
+            honor_graceful_shutdown();
+
+            # Prepend correct ASN if needed
+            {% if peer.rewrite_as_to %}
+            bgp_path.prepend({{ peer.rewrite_as_to }});
+            {% endif %}
+
+            # Only allow specified routes from the peer
+            if (net.type = NET_IP4) then {
+                {% if allowed_imports.ipv4 %}
+                if !(net ~ [
+                    {{ allowed_imports.ipv4 | join(', ') }}
+                ]) then reject;
+                {% else %}
+                reject;
+                {% endif %}
+            }
+            if (net.type = NET_IP6) then {
+                {% if allowed_imports.ipv6 %}
+                if !(net ~ [
+                    {{ allowed_imports.ipv6 | join(', ') }}
+                ]) then reject;
+                {% else %}
+                reject;
+                {% endif %}
+            }
+
+            accept;
+        };
+        export filter {
+            remove_private_asns();
+            reject_bogon_routes();
+            reject_out_of_bounds_routes();
+
+            # Require paths to start with own as
+            if bgp_path.len > 0 && bgp_path.first != OWNAS then reject;
+
+            # Only allow specified routes to the peer
+            if (net.type = NET_IP4) then {
+                {% if allowed_exports.ipv4 %}
+                    if !(net ~ [
+                        {{ allowed_exports.ipv4 | join(', ') }}
+                    ]) then reject;
+                {% endif %}
+            }
+            if (net.type = NET_IP6) then {
+                {% if allowed_exports.ipv6 %}
+                    if !(net ~ [
+                        {{ allowed_exports.ipv6 | join(', ') }}
+                    ]) then reject;
+                {% endif %}
+            }
+
+            accept;
+        };
+    };
+    {% endfor %}
+
+}
+{% endfor%}
+{% endfor %}

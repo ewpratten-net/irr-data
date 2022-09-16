@@ -6,6 +6,7 @@ from birdgen.whois.whois import make_whois_query
 AS_SET_SEARCH_RE = re.compile(r"(?:AS(\d+)\s?)")
 
 def expand_as_set(as_set: str) -> List[int]:
+    print(f"Expanding AS-SET: {as_set}")
     
     # Make a whois query
     data = make_whois_query(f"!i{as_set},1")

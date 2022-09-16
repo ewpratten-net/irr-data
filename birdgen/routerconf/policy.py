@@ -9,6 +9,7 @@ MP_IMPORT_PARSER = re.compile(
 MP_EXPORT_PARSER = re.compile(
     r"afi ([a-z\.]+) to (AS[A-Za-z\d\-:]+)\s+announce ([A-Za-z\d\-:]+)")
 
+
 def linewise_whois(query: str, source: str) -> Generator[Tuple[str, str], None, None]:
     data = make_whois_query(query, source)
 
@@ -85,10 +86,11 @@ def build_router_peer_data(own_as: int, auth_num_obj: List[Tuple[str, str]]) -> 
         # Only process remarks
         if line[0] == "remarks":
             # Only process @routerconf remarks
-            if line[1].startswith("@routerconf"):
+            if line[1].strip().startswith("@routerconf"):
 
                 # Parse into a routerconf line
                 parsed = parse_routerconf_line(line[1], own_as)
+                parsed.policy = get_route_policy(auth_num_obj, parsed.peer_as)
 
                 # Add to the dictionary
                 output.setdefault(parsed.own_router_id, []).append(parsed)

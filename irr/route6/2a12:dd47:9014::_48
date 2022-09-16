@@ -1,0 +1,9 @@
+route6:     2a12:dd47:9014::/48
+descr:      V6ROAM Africa
+origin:     AS398057
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20220916
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB
