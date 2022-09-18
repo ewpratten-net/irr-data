@@ -38,6 +38,8 @@ scp -4 ./scripts/on-router/backbone_gre.sh rtr005-frankfurt-de.net.va3zza.com:/u
 scp -4 ./gen/193.148.249.164.conf rtr005-frankfurt-de.net.va3zza.com:/etc/bird/bird.conf
 scp -4 ./router-config/netplan/rtr005/60-ewpratten-net.yaml rtr005-frankfurt-de.net.va3zza.com:/etc/netplan/60-ewpratten-net.yaml
 ssh -4 rtr005-frankfurt-de.net.va3zza.com " \
+sysctl -w net.ipv6.conf.all.forwarding=1; \
+sysctl -w net.ipv4.ip_forward=1; \
 chmod +x /usr/local/bin/backbone_gre.sh; \
 birdc c
 "

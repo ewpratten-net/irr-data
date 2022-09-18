@@ -109,7 +109,7 @@ protocol bfd {
     interface "backbone" {
         interval 200 ms;
         multiplier 10;
-    }
+    };
 }
 
 # Peers
@@ -238,7 +238,6 @@ protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} from t
 protocol bgp backbone {
     local as OWNAS;
     neighbor range 2a12:dd47:9000::/48 as 4204466000;
-    multihop;
     rs client;
     bfd;
     ipv4 {
@@ -261,7 +260,6 @@ protocol bgp backbone {
 protocol bgp backbone {
     local as 4204466000;
     neighbor 2a12:dd47:9000::1 as OWNAS;
-    multihop;
     bfd;
     ipv4 {
         igp table multihop_madness_v6;
