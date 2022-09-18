@@ -33,6 +33,7 @@ birdc c
 
 # RTR005
 echo "Handling RTR005"
+ssh -4 rtr005-frankfurt-de.net.va3zza.com "rm -rf /var/log/journal/**/*"
 scp -4 ./scripts/on-router/backbone_gre.sh rtr005-frankfurt-de.net.va3zza.com:/usr/local/bin/backbone_gre.sh
 scp -4 ./gen/193.148.249.164.conf rtr005-frankfurt-de.net.va3zza.com:/etc/bird/bird.conf
 scp -4 ./router-config/netplan/rtr005/60-ewpratten-net.yaml rtr005-frankfurt-de.net.va3zza.com:/etc/netplan/60-ewpratten-net.yaml

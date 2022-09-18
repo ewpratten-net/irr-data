@@ -32,6 +32,42 @@ function can_locally_originate_route() {
 {% include 'blackhole.conf' %}
 {% include 'actions.conf' %}
 
+# Multihop routes are needed
+ipv4 table multihop_madness_v4;
+ipv6 table multihop_madness_v6;
+protocol static MultihopStatic_v4 {
+    ipv4{ table multihop_madness_v4; import all; };
+
+    # Toronto static
+    {% if router_id == '74.119.150.163' %}
+	    route 23.159.16.0/24 via 74.119.150.1;
+        route 170.39.230.0/24 via 74.119.150.1;
+	    route 74.119.150.0/24 via 74.119.150.1;
+    {% endif %}
+
+    # NJ static
+    {% if router_id == '68.232.175.168' %}
+        route 169.254.169.254/32 via 68.232.175.1;
+    {% endif %}
+}
+protocol static MultihopStatic_v6 {
+	ipv6{ table multihop_madness_v6; import all; };
+    
+    # Everyone needs the backbone route
+    route 2a12:dd47:9000::/48 via "backbone";
+
+    # Toronto static
+    {% if router_id == '74.119.150.163' %}
+	    route 2602:fd50:101::/48 via fe80::464c:a8ff:fe18:6665%'ens3';
+	    route 2602:fd50:100::/48 via fe80::464c:a8ff:fe18:6665%'ens3'; #2602:fd50:101:1::1;
+    {% endif %}
+    
+    # NJ static
+    {% if router_id == '68.232.175.168' %}
+    	route 2001:19f0:ffff::1/128 via fe80::5400:4ff:fe1a:14d6%'enp1s0';
+    {% endif %}
+}
+
 # Kernel
 filter local_import {
     if !can_locally_originate_route() then reject;
@@ -68,24 +104,23 @@ protocol kernel {
     metric 0;
 }
 
+# Backbone bfd
+protocol bfd {
+    interface "backbone" {
+        interval 200 ms;
+        multiplier 10;
+    }
+}
+
 # Peers
 {% for peer in routing_policy %}
-{% for address in peer.peer_neighbor_ips %}
-{% if ":" in address %}
-{% set address_kind = 6 %}
-{% else %}
-{% set address_kind = 4 %}
-{% endif %}
-protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
+template bgp tl_{{ peer.name | upper }} {
     local as {{ peer.own_as }};
-    neighbor {{ address }} as {{ peer.peer_as }};
-
     {% if peer.multihop %}
-    multihop;
+        multihop;
     {% endif %}
-
     {% if peer.password %}
-    password "{{ peer.password }}";
+        password "{{ peer.password }}";
     {% endif %}
 
     {% set allowed_imports = peer.get_peer_allowed_routes() %}
@@ -97,6 +132,9 @@ protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
         add paths;
         {% if peer.extended_nexthop %}
         extended next hop;
+        {% endif %}
+        {% if peer.multihop %}
+        igp table multihop_madness_v{{ num }};
         {% endif %}
 
         import filter {
@@ -112,6 +150,11 @@ protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
             {% if peer.rewrite_as_to %}
             bgp_path.prepend({{ peer.rewrite_as_to }});
             {% endif %}
+
+            # Prepend on import if needed
+            {% for i in peer.prepend_in %}
+            bgp_path.prepend(OWNAS);
+            {% endfor %}
 
             # Only allow specified routes from the peer
             if (net.type = NET_IP4) then {
@@ -161,30 +204,43 @@ protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} {
                 {% endif %}
             }
 
+            # Prepend on export if needed
+            {% for i in peer.prepend_out %}
+            bgp_path.prepend(OWNAS);
+            {% endfor %}
+
+            # Handle setting communities
+            {% for community in peer.export_communities %}
+            bgp_community.add(({{ community }}));
+            {% endfor %}
+            {% for community in peer.export_large_communities %}
+            bgp_large_community.add(({{ community }}));
+            {% endfor %}
             accept;
         };
     };
     {% endfor %}
+}
 
+{% for address in peer.peer_neighbor_ips %}
+{% if ":" in address %}
+{% set address_kind = 6 %}
+{% else %}
+{% set address_kind = 4 %}
+{% endif %}
+protocol bgp {{ peer.name | upper }}_V{{ address_kind }}_{{ loop.index }} from tl_{{ peer.name | upper }} {
+    neighbor {{ address }} as {{ peer.peer_as }};
 }
 {% endfor%}
 {% endfor %}
 
-# Open a passive backbone connection on the main router
-ipv6 table multihop_madness_v6;
-protocol static {
-    ipv6 {
-        table multihop_madness_v6;
-        import all;
-    };
-    route 2a12:dd47:9000::/48 via "backbone";
-}
 {% if router_id == '74.119.150.163' %}
 protocol bgp backbone {
     local as OWNAS;
     neighbor range 2a12:dd47:9000::/48 as 4204466000;
     multihop;
     rs client;
+    bfd;
     ipv4 {
         igp table multihop_madness_v6;
         extended next hop;
@@ -206,6 +262,7 @@ protocol bgp backbone {
     local as 4204466000;
     neighbor 2a12:dd47:9000::1 as OWNAS;
     multihop;
+    bfd;
     ipv4 {
         igp table multihop_madness_v6;
         extended next hop;

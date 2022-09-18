@@ -15,8 +15,12 @@ _routerconf_re_stmnt += r"\s?(?:name ([A-Za-z_]+))?"
 _routerconf_re_stmnt += r"\s?(multihop)?"
 _routerconf_re_stmnt += r"\s?(add-paths)?"
 _routerconf_re_stmnt += r"\s?(extended-nexthop)?"
+_routerconf_re_stmnt += r"\s?(?:prepend (\d+)\s?(\d+)?)?"
+_routerconf_re_stmnt += r"\s?(?:prepend-private (\d+)\s?(\d+)?)?"
+_routerconf_re_stmnt += r"\s?(?:export-communities ([\d:\s]+))?"
 
 # Compile
+print(f"Compiling routerconf RE: {_routerconf_re_stmnt}")
 ROUTERCONF_RE = re.compile(_routerconf_re_stmnt)
 
 
@@ -30,12 +34,18 @@ class RouterconfStatement:
     add_paths: bool
     extended_nexthop: bool
     peer_neighbor_ips: List[str]
+    prepend_in: range
+    prepend_out: range
+    prepend_in_private: range
+    prepend_out_private: range
+    export_communities: List[str]
+    export_large_communities: List[str]
     password: Optional[str] = field(default=None)
     rewrite_as_to: Optional[int] = field(default=None)
 
     def get_peer_allowed_routes(self) -> Routes:
         return get_routes_for_as_set(self.policy["import"])
-    
+
     def get_allowed_routes_for_export(self) -> Routes:
         return get_routes_for_as_set(self.policy["export"])
 
@@ -44,6 +54,8 @@ def parse_routerconf_line(raw_line: str, own_as: int) -> RouterconfStatement:
 
     # Parse the line
     matches = ROUTERCONF_RE.match(raw_line)
+
+    communities_out = matches.group(15).split(" ") if matches.group(15) else []
 
     # Build the statement
     return RouterconfStatement(
@@ -59,5 +71,16 @@ def parse_routerconf_line(raw_line: str, own_as: int) -> RouterconfStatement:
         password=os.environ[f"PEER_PASS_{matches.group(1).upper()}"] if matches.group(
             4) else None,
         rewrite_as_to=int(matches.group(1).replace(
-            "AS", "")) if matches.group(5) else None
+            "AS", "")) if matches.group(5) else None,
+        prepend_in=range(int(matches.group(11)) if matches.group(11) else 0),
+        prepend_out=range(int(matches.group(12)) if matches.group(
+            12) else int(matches.group(11)) if matches.group(11) else 0),
+        prepend_in_private=range(
+            int(matches.group(13)) if matches.group(13) else 0),
+        prepend_out_private=range(int(matches.group(14)) if matches.group(
+            14) else int(matches.group(13)) if matches.group(13) else 0),
+        export_communities=[x.strip().replace(":", ",")
+                            for x in communities_out if len(x.split(":")) == 2],
+        export_large_communities=[x.strip().replace(":", ",")
+                                  for x in communities_out if len(x.split(":")) == 3],
     )
