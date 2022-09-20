@@ -139,17 +139,41 @@ template bgp tl_{{ peer.name | upper }} {
 
         import filter {
             # Filter out the bad
-            reject_bogon_routes();
-            reject_bogon_asns();
-            reject_out_of_bounds_routes();
-            reject_rpki_invalid();
             reject_transit_paths();
+            reject_bogon_routes();
+            {#% if not peer.rewrite_as_to %#}
+            # reject_bogon_asns();
+            {#% endif %#}
+            reject_out_of_bounds_routes();
             honor_graceful_shutdown();
+
+            # Keep my monitoring happy by not importing bgp.tools' own routes
+            case net.type {
+                NET_IP4: if net ~ 185.230.223.0/24 then return false;
+                NET_IP6: if net ~ 2a0c:2f07:9459::/48 then return false;
+            }
 
             # Prepend correct ASN if needed
             {% if peer.rewrite_as_to %}
             bgp_path.prepend({{ peer.rewrite_as_to }});
             {% endif %}
+
+            # Drop denied downstreams
+            {% if peer.drop_ases %}
+            if (bgp_path ~ [ {{peer.drop_ases | join(', ')}} ]) then reject;
+            {% endif %}
+
+            # Remove private ASes
+            remove_private_asns();
+
+            # Vultr is weird
+            {% if peer.peer_as == "64515" %}
+            if (bgp_path.len = 0) then bgp_path.prepend(20473);
+            if (bgp_path.len = 1 && bgp_path.first != 20473) then bgp_path.prepend(20473);
+            {% endif %}
+
+            # Finally perform RPKI check
+            reject_rpki_invalid();
 
             # Prepend on import if needed
             {% for i in peer.prepend_in %}
@@ -246,7 +270,7 @@ protocol bgp backbone {
         add paths;
         next hop self;
         import where can_locally_originate_route();
-        export where can_locally_originate_route();
+        export where can_locally_originate_route() && !(net = 44.31.62.0/24);
     };
     ipv6 {
         igp table multihop_madness_v6;
@@ -267,7 +291,7 @@ protocol bgp backbone {
         add paths;
         next hop self;
         import where can_locally_originate_route();
-        export where can_locally_originate_route();
+        export where can_locally_originate_route() && !(net = 44.31.62.0/24);
     };
     ipv6 {
         igp table multihop_madness_v6;

@@ -30,6 +30,7 @@ remarks:    peer <asn> from <router_id> at {<list_of_endpoints>}
             [prepend <number> [<out>]]
             [prepend-private <number> [<out>]]
             [export-communities <community> ...]
+            [drop-peer-downstreams <num>...]
 remarks:    
 remarks:    Router IDs in use:
 remarks:     74.119.150.163: rtr001 Toronto (CA)
@@ -74,8 +75,8 @@ remarks:    @routerconf peer AS20473 from 68.232.175.168 at {
             uses-private-as 64515 
             name constant
             multihop
-            export-communities 64602:577
-            export-communities 64602:812
+            export-communities 64602:577 64602:812
+            drop-peer-downstreams 6939
 mp-import:  afi any.unicast from AS20473 accept AS-VULTR
 mp-export:  afi any.unicast to AS20473 announce AS398057
 remarks:    ----------------------------------------------------------
@@ -177,7 +178,7 @@ remarks:    > Default rules
 mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
 remarks:    ------------------------ CHANGES -------------------------
-changed:    noc@ewpratten.com 20220918
+changed:    noc@ewpratten.com 20220920
 remarks:    policy updates
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN

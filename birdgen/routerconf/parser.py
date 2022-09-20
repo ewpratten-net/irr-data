@@ -18,6 +18,7 @@ _routerconf_re_stmnt += r"\s?(extended-nexthop)?"
 _routerconf_re_stmnt += r"\s?(?:prepend (\d+)\s?(\d+)?)?"
 _routerconf_re_stmnt += r"\s?(?:prepend-private (\d+)\s?(\d+)?)?"
 _routerconf_re_stmnt += r"\s?(?:export-communities ([\d:\s]+))?"
+_routerconf_re_stmnt += r"\s?(?:drop-peer-downstreams ([\d\s]+))?"
 
 # Compile
 print(f"Compiling routerconf RE: {_routerconf_re_stmnt}")
@@ -27,6 +28,7 @@ ROUTERCONF_RE = re.compile(_routerconf_re_stmnt)
 @dataclass
 class RouterconfStatement:
     peer_as: int
+    public_asn: int
     own_as: int
     own_router_id: str
     name: str
@@ -40,6 +42,7 @@ class RouterconfStatement:
     prepend_out_private: range
     export_communities: List[str]
     export_large_communities: List[str]
+    drop_ases: List[int]
     password: Optional[str] = field(default=None)
     rewrite_as_to: Optional[int] = field(default=None)
 
@@ -56,11 +59,13 @@ def parse_routerconf_line(raw_line: str, own_as: int) -> RouterconfStatement:
     matches = ROUTERCONF_RE.match(raw_line)
 
     communities_out = matches.group(15).split(" ") if matches.group(15) else []
-
+    # print(matches.group(0))
+    
     # Build the statement
     return RouterconfStatement(
         peer_as=int(matches.group(1).replace("AS", "")
                     ) if not matches.group(5) else matches.group(5),
+        public_asn=int(matches.group(1).replace("AS", "")),
         own_as=int(matches.group(6)) if matches.group(6) else own_as,
         own_router_id=matches.group(2),
         name=matches.group(7) if matches.group(7) else matches.group(1),
@@ -70,8 +75,7 @@ def parse_routerconf_line(raw_line: str, own_as: int) -> RouterconfStatement:
         peer_neighbor_ips=[x.strip() for x in matches.group(3).split(",")],
         password=os.environ[f"PEER_PASS_{matches.group(1).upper()}"] if matches.group(
             4) else None,
-        rewrite_as_to=int(matches.group(1).replace(
-            "AS", "")) if matches.group(5) else None,
+        rewrite_as_to=None,
         prepend_in=range(int(matches.group(11)) if matches.group(11) else 0),
         prepend_out=range(int(matches.group(12)) if matches.group(
             12) else int(matches.group(11)) if matches.group(11) else 0),
@@ -83,4 +87,5 @@ def parse_routerconf_line(raw_line: str, own_as: int) -> RouterconfStatement:
                             for x in communities_out if len(x.split(":")) == 2],
         export_large_communities=[x.strip().replace(":", ",")
                                   for x in communities_out if len(x.split(":")) == 3],
+        drop_ases=[int(x.strip()) for x in matches.group(16).split(" ")] if matches.group(16) else [],
     )

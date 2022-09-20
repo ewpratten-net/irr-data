@@ -90,7 +90,7 @@ def build_router_peer_data(own_as: int, auth_num_obj: List[Tuple[str, str]]) -> 
 
                 # Parse into a routerconf line
                 parsed = parse_routerconf_line(line[1], own_as)
-                parsed.policy = get_route_policy(auth_num_obj, parsed.peer_as)
+                parsed.policy = get_route_policy(auth_num_obj, parsed.public_asn or parsed.peer_as)
 
                 # Add to the dictionary
                 output.setdefault(parsed.own_router_id, []).append(parsed)
