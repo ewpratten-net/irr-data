@@ -1,6 +1,7 @@
 import argparse
 from pathlib import Path
 import sys
+from birdgen.asn_blocks import get_banned_asn_list
 from birdgen.routerconf.policy import build_router_peer_data, linewise_whois
 from jinja2 import Environment, PackageLoader, select_autoescape
 from birdgen.whois.irr_routes import get_routes_for_asn
@@ -27,6 +28,9 @@ def main() -> int:
     # We need a list of router ids to iterate over
     router_ids = list(routing_policy.keys())
     
+    # Get banned ASNs
+    banned_ases = get_banned_asn_list()
+    
     # Ensure the output directory exists
     output_dir = Path(args.output)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -44,7 +48,8 @@ def main() -> int:
             own_asn=args.asn,
             router_id=router_id,
             self_origin_routes=self_origin_routes,
-            routing_policy=routing_policy[router_id]
+            routing_policy=routing_policy[router_id],
+            banned_ases=banned_ases
         )
         with open(output_dir / f"{router_id}.conf", "w") as f:
             for line in file_contents.splitlines():

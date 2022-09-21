@@ -16,5 +16,6 @@
         "PRATTEN",
         "routerconf",
         "VULTR"
-    ]
+    ],
+    "discord.removeDetails": true
 }

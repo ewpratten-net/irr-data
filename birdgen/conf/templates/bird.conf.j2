@@ -112,6 +112,9 @@ protocol bfd {
     };
 }
 
+# ASN banlist
+define BANNED_ASNS = [ {{ banned_ases | join(', ') }} ];
+
 # Peers
 {% for peer in routing_policy %}
 template bgp tl_{{ peer.name | upper }} {
@@ -146,6 +149,7 @@ template bgp tl_{{ peer.name | upper }} {
             {#% endif %#}
             reject_out_of_bounds_routes();
             honor_graceful_shutdown();
+            if bgp_path ~ BANNED_ASNS then reject_route("ASN Banned");
 
             # Keep my monitoring happy by not importing bgp.tools' own routes
             case net.type {
@@ -270,7 +274,7 @@ protocol bgp backbone {
         add paths;
         next hop self;
         import where can_locally_originate_route();
-        export where can_locally_originate_route() && !(net = 44.31.62.0/24);
+        export where can_locally_originate_route();# && !(net = 44.31.62.0/24);
     };
     ipv6 {
         igp table multihop_madness_v6;
@@ -291,7 +295,7 @@ protocol bgp backbone {
         add paths;
         next hop self;
         import where can_locally_originate_route();
-        export where can_locally_originate_route() && !(net = 44.31.62.0/24);
+        export where can_locally_originate_route();# && !(net = 44.31.62.0/24);
     };
     ipv6 {
         igp table multihop_madness_v6;
