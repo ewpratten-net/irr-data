@@ -8,11 +8,13 @@ remarks:    https://ewpratten.com/network/#peering
 remarks:
 remarks:    ------------------- BGP COMMUNITY INFO -------------------
 remarks:    > Informational Communities
-remarks:    398057:100 - Route originated from AS398057
-remarks:    398057:110 - Route learned from a peer
-remarks:    398057:111 - Route learned from a peer via route server
-remarks:    398057:120 - Route learned from a downstream / customer
-remarks:    398057:190 - Route has multiple internal hops
+remarks:    398057:0:0 - Retain Internally
+remarks:    398057:0:1000 - Route originated from AS398057
+remarks:    398057:0:1010 - Route learned from a peer
+remarks:    398057:0:1011 - Route learned from a peer via route server
+remarks:    398057:0:1020 - Route learned from a downstream / customer
+remarks:    398057:0:1900 - Route has multiple internal hops
+remarks:    398057:0:2001 - Route next-hop as was rewritten
 remarks:
 remarks:    --------------------- ROUTING POLICY ---------------------
 remarks:    The following routing policy data includes instructions 
@@ -106,7 +108,7 @@ remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
             name august
             multihop
             extended-nexthop
-            prepend 1
+            prepend 1 1
 mp-import:  afi any.unicast from AS50058 accept AS50058
 remarks:    ----------------------------------------------------------
 remarks:    > LocIX Route Servers
@@ -178,8 +180,8 @@ remarks:    > Default rules
 mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
 remarks:    ------------------------ CHANGES -------------------------
-changed:    noc@ewpratten.com 20220920
-remarks:    policy updates
+changed:    noc@ewpratten.com 20221001
+remarks:    Communities
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN

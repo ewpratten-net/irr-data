@@ -24,6 +24,19 @@ function can_locally_originate_route() {
     return false;
 }
 
+# Hack to let only some routes pass over the backbone
+function can_share_route_with_backbone() {
+    if (net.type = NET_IP4) then {
+        return false;
+    }
+    if (net.type = NET_IP6) then {
+        return net ~ [
+            2a07:54c2:b00b::/48
+        ];
+    }
+    return false;
+}
+
 # RPKI
 {% include 'rpki.conf' %}
 
@@ -160,6 +173,7 @@ template bgp tl_{{ peer.name | upper }} {
             # Prepend correct ASN if needed
             {% if peer.rewrite_as_to %}
             bgp_path.prepend({{ peer.rewrite_as_to }});
+            bgp_community.add((OWNAS,2001));
             {% endif %}
 
             # Drop denied downstreams
@@ -204,12 +218,19 @@ template bgp tl_{{ peer.name | upper }} {
                 {% endif %}
             }
 
+            # Set origin communities
+            if (bgp_path.len = 0) then bgp_large_community.add((OWNAS,0,1010));
+
             accept;
         };
         export filter {
             remove_private_asns();
             reject_bogon_routes();
             reject_out_of_bounds_routes();
+
+            # Drop routes with no-export
+            if (bgp_large_community ~ [(OWNAS, 0, 0)]) then reject;
+            if (bgp_community ~ [(65535, 666)]) then reject;
 
             # Require paths to start with own as
             {% if "0.0.0.0/0{0,32}" not in allowed_exports.ipv4 and "::/0{0,128}" not in allowed_exports.ipv6 %}
@@ -244,6 +265,10 @@ template bgp tl_{{ peer.name | upper }} {
             {% for community in peer.export_large_communities %}
             bgp_large_community.add(({{ community }}));
             {% endfor %}
+
+            # Set origin communities
+            if (bgp_path.len = 0) then bgp_large_community.add((OWNAS,0,1000));
+
             accept;
         };
     };
@@ -273,15 +298,31 @@ protocol bgp backbone {
         extended next hop;
         add paths;
         next hop self;
-        import where can_locally_originate_route();
-        export where can_locally_originate_route();# && !(net = 44.31.62.0/24);
+        import filter { 
+            bgp_large_community.add((OWNAS,0,1900));
+            return can_locally_originate_route();
+        };
+        export filter {
+            if !can_share_route_with_backbone() then {
+                bgp_large_community.add((OWNAS,0,0));
+            }
+            return can_locally_originate_route();
+        };
     };
     ipv6 {
         igp table multihop_madness_v6;
         add paths;
         next hop self;
-        import where can_locally_originate_route();
-        export where can_locally_originate_route();
+        import filter { 
+            bgp_large_community.add((OWNAS,0,1900));
+            return can_locally_originate_route();
+        };
+        export filter {
+            if !can_share_route_with_backbone() then {
+                bgp_large_community.add((OWNAS,0,0));
+            }
+            return can_locally_originate_route();
+        };
     };
 }
 {% else %}
@@ -294,15 +335,31 @@ protocol bgp backbone {
         extended next hop;
         add paths;
         next hop self;
-        import where can_locally_originate_route();
-        export where can_locally_originate_route();# && !(net = 44.31.62.0/24);
+        import filter { 
+            bgp_large_community.add((OWNAS,0,1900));
+            return can_locally_originate_route();
+        };
+        export filter {
+            if !can_share_route_with_backbone() then {
+                bgp_large_community.add((OWNAS,0,0));
+            }
+            return can_locally_originate_route();
+        };
     };
     ipv6 {
         igp table multihop_madness_v6;
         add paths;
         next hop self;
-        import where can_locally_originate_route();
-        export where can_locally_originate_route();
+        import filter { 
+            bgp_large_community.add((OWNAS,0,1900));
+            return can_locally_originate_route();
+        };
+        export filter {
+            if !can_share_route_with_backbone() then {
+                bgp_large_community.add((OWNAS,0,0));
+            }
+            return can_locally_originate_route();
+        };
     };
 }
 {% endif %}
