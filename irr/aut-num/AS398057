@@ -127,6 +127,14 @@ remarks:    ----------------------------------------------------------
 remarks:    > Paul Nicholas Lewis
 remarks:    #mp-import:  afi any.unicast from AS204778 accept AS204778
 remarks:    ----------------------------------------------------------
+remarks:    > Dominik Pohl
+remarks:    @routerconf peer AS205848 from 193.148.249.164 at {
+                185.1.167.129,
+                2001:7f8:f2:e1:0:20:5848:1
+            }
+            name Dominik_Pohl
+mp-import:  afi any.unicast from AS205848 accept AS-DOMINIK-POHL
+remarks:    ----------------------------------------------------------
 remarks:    > Vladislav Tatyanin
 remarks:    @routerconf peer AS206016 from 74.119.150.163 at {
                 2a06:a005:d4f::1:6
@@ -181,7 +189,7 @@ mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
 remarks:    ------------------------ CHANGES -------------------------
 changed:    noc@ewpratten.com 20221001
-remarks:    Communities
+remarks:    New Peer
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN
 tech-c:     PRATT166-ARIN
