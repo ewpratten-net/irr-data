@@ -91,16 +91,6 @@ remarks:    @routerconf peer AS34927 from 193.148.249.164 at {
             extended-nexthop
 mp-import:  afi any.unicast from AS34927 accept AS34927
 remarks:    ----------------------------------------------------------
-remarks:    > FogIXP Route Servers
-remarks:    @routerconf peer AS47498 from 193.148.249.164 at {
-                185.1.147.111, 
-                185.1.147.222, 
-                2001:7f8:ca:1::111, 
-                2001:7f8:ca:1::222
-            }
-            name FogIXP_RS
-remarks:    #mp-import:  afi any.unicast from AS47498 accept AS-FOGIXP
-remarks:    ----------------------------------------------------------
 remarks:    > August Internet
 remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
                 2602:fc23:10:23::1
@@ -110,19 +100,6 @@ remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
             extended-nexthop
             prepend 1 1
 mp-import:  afi any.unicast from AS50058 accept AS50058
-remarks:    ----------------------------------------------------------
-remarks:    > LocIX Route Servers
-remarks:    @routerconf peer AS202409 from 193.148.249.164 at {
-            185.1.166.100, 
-            185.1.166.200, 
-            185.1.166.254, 
-            2001:7f8:f2:e1::babe:1, 
-            2001:7f8:f2:e1::dead:1, 
-            2001:7f8:f2:e1::be5a 
-            }
-            name LocIX_RS
-mp-import:  afi any.unicast from AS202409 
-            accept AS398057:AS-LOCIX-SELECT
 remarks:    ----------------------------------------------------------
 remarks:    > Paul Nicholas Lewis
 remarks:    #mp-import:  afi any.unicast from AS204778 accept AS204778
