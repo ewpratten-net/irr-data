@@ -43,3 +43,11 @@ network:
         macaddress: 46:9f:7e:d5:1c:8a
       mtu: 1500
       set-name: ens20
+
+  tunnels:
+    peer-mario:
+      mode: gre
+      local: 193.148.249.164
+      remote: 181.214.231.179
+      addresses:
+          - 2a12:dd47:9002::1/126

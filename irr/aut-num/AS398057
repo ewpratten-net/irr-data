@@ -36,10 +36,11 @@ remarks:    peer <asn> from <router_id> at {<list_of_endpoints>}
 remarks:    
 remarks:    Router IDs in use:
 remarks:     74.119.150.163: rtr001 Toronto (CA)
-remarks:     68.232.175.168: rtr002 New Jersey (US)
 remarks:     193.148.251.59: rtr003 Kansas City (US)
-remarks:     134.195.121.110: rtr004 Fremont (US)
 remarks:     193.148.249.164: rtr005 Frankfurt (DE)
+remarks:
+remarks:    Tunnel ID assignment notes:
+remarks:     - 2a12:dd47:9002::/126 is AS212294 
 remarks:    ----------------------------------------------------------
 remarks:    > AS112 Project
 remarks:    @routerconf peer AS112 from 193.148.249.164 at {
@@ -101,8 +102,14 @@ remarks:    @routerconf peer AS50058 from 74.119.150.163 at {
             prepend 1 1
 mp-import:  afi any.unicast from AS50058 accept AS50058
 remarks:    ----------------------------------------------------------
-remarks:    > Paul Nicholas Lewis
-remarks:    #mp-import:  afi any.unicast from AS204778 accept AS204778
+remarks:    > Marek H.E. Kuethe
+remarks:    @routerconf peer AS202952 from 193.148.249.164 at {
+                2001:7f8:ca:1::117
+            }
+            name Marek_Kuethe
+            extended-nexthop
+mp-import:  afi any.unicast from AS202952 
+            accept AS-BANDURA-COMMUNICATIONS-SET
 remarks:    ----------------------------------------------------------
 remarks:    > Dominik Pohl
 remarks:    @routerconf peer AS205848 from 193.148.249.164 at {
@@ -111,14 +118,6 @@ remarks:    @routerconf peer AS205848 from 193.148.249.164 at {
             }
             name Dominik_Pohl
 mp-import:  afi any.unicast from AS205848 accept AS-DOMINIK-POHL
-remarks:    ----------------------------------------------------------
-remarks:    > Vladislav Tatyanin
-remarks:    @routerconf peer AS206016 from 74.119.150.163 at {
-                2a06:a005:d4f::1:6
-            }
-            name Vladislav_Tatyanin
-            extended-nexthop
-mp-import:  afi any.unicast from AS206016 accept AS206016
 remarks:    ----------------------------------------------------------
 remarks:    > EricNet
 remarks:    @routerconf peer AS206016 from 134.195.121.110 at {
@@ -154,8 +153,8 @@ mp-import:  afi any.unicast from AS212232 accept AS212232
 mp-export:  afi any.unicast to AS212232 announce ANY
 remarks:    ----------------------------------------------------------
 remarks:    > Mario Gomez Canadas
-remarks:    @routerconf peer AS212294 from 74.119.150.163 at {
-                2a06:a005:d4f::1:2
+remarks:    @routerconf peer AS212294 from 193.148.249.164 at {
+                2a12:dd47:9002::2
             }
             name Mario_Gomez_Canadas
             extended-nexthop
@@ -165,7 +164,7 @@ remarks:    > Default rules
 mp-export:  afi any.unicast to AS-ANY announce AS-EWP
 remarks:
 remarks:    ------------------------ CHANGES -------------------------
-changed:    noc@ewpratten.com 20221001
+changed:    noc@ewpratten.com 20221004
 remarks:    New Peer
 remarks:    ---------------------- END CHANGES -----------------------
 admin-c:    PRATT166-ARIN

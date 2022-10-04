@@ -4,14 +4,11 @@ remarks:    ---------------------------
 remarks:    > Mario Gomez Canadas
 members:    AS-MARIO
 remarks:
-remarks:    > Vladislav Tatyanin
-members:    AS-EZDOMAIN
-remarks:
-remarks:    > Paul Nicholas Lewis
-members:    AS204778
+remarks:    > Marek H.E. Kuethe
+members:    AS-BANDURA-COMMUNICATIONS-SET
 remarks:    --------- CHANGES ---------
-changed:    noc@ewpratten.com 20220914
-remarks:    Created object
+changed:    noc@ewpratten.com 20221004
+remarks:    Add Downstream
 remarks:    ------- END CHANGES -------
 mnt-by:     MAINT-AS398057
 source:     ALTDB
