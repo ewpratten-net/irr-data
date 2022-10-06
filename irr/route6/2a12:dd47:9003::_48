@@ -1,0 +1,9 @@
+route6:     2a12:dd47:9003::/48
+descr:      Evan Pratten - Web Hosting
+origin:     AS398057
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20221006
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB
