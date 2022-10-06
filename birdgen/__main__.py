@@ -4,7 +4,7 @@ import sys
 from birdgen.asn_blocks import get_banned_asn_list
 from birdgen.routerconf.policy import build_router_peer_data, linewise_whois
 from jinja2 import Environment, PackageLoader, select_autoescape
-from birdgen.whois.irr_routes import get_routes_for_asn
+from birdgen.whois.irr_routes import get_routes_for_as_set, get_routes_for_asn
 
 
 def main() -> int:
@@ -19,6 +19,7 @@ def main() -> int:
 
     # Get all routes allowed to be originated by the ASN
     self_origin_routes = get_routes_for_asn(args.asn)
+    downstream_routes = get_routes_for_as_set("AS-EWP")
 
     # Get the routing policy for the ASN
     aut_num = list(linewise_whois(
@@ -49,7 +50,8 @@ def main() -> int:
             router_id=router_id,
             self_origin_routes=self_origin_routes,
             routing_policy=routing_policy[router_id],
-            banned_ases=banned_ases
+            banned_ases=banned_ases,
+            downstream_routes=downstream_routes
         )
         with open(output_dir / f"{router_id}.conf", "w") as f:
             for line in file_contents.splitlines():

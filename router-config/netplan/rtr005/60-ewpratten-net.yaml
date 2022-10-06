@@ -5,6 +5,7 @@ network:
       addresses:
         - 44.31.119.1/24
         - 2a12:dd47:9fff::1/48
+        - 2a12:dd47:9002::/48
     # iFog internet
     ens18:
       accept-ra: true

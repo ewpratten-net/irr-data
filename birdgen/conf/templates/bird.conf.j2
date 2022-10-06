@@ -24,6 +24,22 @@ function can_locally_originate_route() {
     return false;
 }
 
+# Check function to see if IRR allows us to declare a route "downstream"
+function is_downstream_route() {
+    if can_locally_originate_route() then return false;
+    if (net.type = NET_IP4) then {
+        return net ~ [
+            {{ downstream_routes.ipv4 | join(', ') }}
+        ];
+    }
+    if (net.type = NET_IP6) then {
+        return net ~ [
+            {{ downstream_routes.ipv6 | join(', ') }}
+        ];
+    }
+    return false;
+}
+
 # Hack to let only some routes pass over the backbone
 function can_share_route_with_backbone() {
     if (net.type = NET_IP4) then {
@@ -173,7 +189,7 @@ template bgp tl_{{ peer.name | upper }} {
             # Prepend correct ASN if needed
             {% if peer.rewrite_as_to %}
             bgp_path.prepend({{ peer.rewrite_as_to }});
-            bgp_community.add((OWNAS,2001));
+            bgp_large_community.add((OWNAS,0,2001));
             {% endif %}
 
             # Drop denied downstreams
@@ -219,7 +235,8 @@ template bgp tl_{{ peer.name | upper }} {
             }
 
             # Set origin communities
-            if (bgp_path.len = 0) then bgp_large_community.add((OWNAS,0,1010));
+            bgp_large_community.add((OWNAS,0,1010));
+            if is_downstream_route() then bgp_large_community.add((OWNAS,0,1020));
 
             accept;
         };
@@ -234,7 +251,7 @@ template bgp tl_{{ peer.name | upper }} {
 
             # Require paths to start with own as
             {% if "0.0.0.0/0{0,32}" not in allowed_exports.ipv4 and "::/0{0,128}" not in allowed_exports.ipv6 %}
-            if bgp_path.len > 0 && bgp_path.first != OWNAS then reject;
+            # if bgp_path.len > 0 && bgp_path.first != OWNAS then reject;
             {% endif %}
 
             # Only allow specified routes to the peer
@@ -300,13 +317,13 @@ protocol bgp backbone {
         next hop self;
         import filter { 
             bgp_large_community.add((OWNAS,0,1900));
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
         export filter {
             if !can_share_route_with_backbone() then {
                 bgp_large_community.add((OWNAS,0,0));
             }
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
     };
     ipv6 {
@@ -315,13 +332,13 @@ protocol bgp backbone {
         next hop self;
         import filter { 
             bgp_large_community.add((OWNAS,0,1900));
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
         export filter {
             if !can_share_route_with_backbone() then {
                 bgp_large_community.add((OWNAS,0,0));
             }
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
     };
 }
@@ -337,13 +354,13 @@ protocol bgp backbone {
         next hop self;
         import filter { 
             bgp_large_community.add((OWNAS,0,1900));
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
         export filter {
             if !can_share_route_with_backbone() then {
                 bgp_large_community.add((OWNAS,0,0));
             }
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
     };
     ipv6 {
@@ -352,13 +369,13 @@ protocol bgp backbone {
         next hop self;
         import filter { 
             bgp_large_community.add((OWNAS,0,1900));
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
         export filter {
             if !can_share_route_with_backbone() then {
                 bgp_large_community.add((OWNAS,0,0));
             }
-            return can_locally_originate_route();
+            return can_locally_originate_route() || is_downstream_route();
         };
     };
 }

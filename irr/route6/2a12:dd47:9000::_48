@@ -1,0 +1,9 @@
+route6:     2a12:dd47:9000::/48
+descr:      Evan Pratten - Infrastructure
+origin:     AS398057
+remarks:    --------- CHANGES ---------
+changed:    noc@ewpratten.com 20221006
+remarks:    Created object
+remarks:    ------- END CHANGES -------
+mnt-by:     MAINT-AS398057
+source:     ALTDB
